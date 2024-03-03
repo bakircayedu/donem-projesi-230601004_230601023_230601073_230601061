@@ -9,13 +9,11 @@ unsigned long long int* primeGen();
 
 
 
-
-
 int main(){
 
-    unsigned long long int* primes = primeGen();
-    cout<<*primes<<endl;
-    cout<<*(primes+1);
+    unsigned long long int* a = primeGen();
+    cout<<*a<<endl;
+    cout<<*(a+1);
 
     
 }
@@ -29,7 +27,7 @@ unsigned long long int* primeGen(){
     random_device rd;
     default_random_engine generator(rd());
     unsigned long long int max = -1;
-    unsigned long long int min = 10000000000000000000;
+    unsigned long int min = -1;
 
     uniform_int_distribution<long long unsigned> distribution(min,max);
     for(int i = 0; i<=1; i++){
