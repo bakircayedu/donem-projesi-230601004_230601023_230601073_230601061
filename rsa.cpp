@@ -26,8 +26,8 @@ unsigned long long int* primeGen(){
     
     random_device rd;
     default_random_engine generator(rd());
-    unsigned long long int max = -1;
-    unsigned long int min = -1;
+    unsigned long long int max = 9999999999;
+    unsigned long long int min = 1000000000;
 
     uniform_int_distribution<long long unsigned> distribution(min,max);
     for(int i = 0; i<=1; i++){
