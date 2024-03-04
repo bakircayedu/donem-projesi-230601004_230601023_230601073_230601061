@@ -1,30 +1,17 @@
 #include <iostream>
 #include <cmath>
 #include <random>
-#include <algorithm>
 
 using namespace std;
 
 bool isPrime(uint64_t);
 uint64_t* primeGen();
 uint64_t gcd(uint64_t,uint64_t);
-
+uint64_t* encrypt(char*, uint64_t, uint64_t, uint64_t);
 
 
 int main(){
 
-    //testing
-    uint64_t* a = primeGen();
-    uint64_t n = (*(a)-1) * (*(a+1)-1);
-
-    cout<<*a<<endl;
-    cout<<*(a+1)<<endl;
-    uint64_t e = 3;
-    while(gcd(e,n)!=1){
-        e+=2;
-    }
-    cout<<e<<endl;
-    //testing
 }
 
 uint64_t* primeGen(){
@@ -74,5 +61,25 @@ uint64_t gcd(uint64_t a, uint64_t b) {
     }
     return gcd(b, a % b);
 }
+
+uint64_t* encrypt(char *m, uint64_t p, uint64_t q, uint64_t e){
+
+    int temp;
+
+    uint64_t n = p*q;
+
+    while(*(m) != '\0'){
+        temp = (int)*(m);
+        temp = pow(temp,e);
+        temp %= n;
+        *(m) = temp;
+        ++m;
+    }
+    
+}
+
+
+
+
 
 
