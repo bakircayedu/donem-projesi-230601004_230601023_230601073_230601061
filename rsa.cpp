@@ -8,9 +8,34 @@ bool isPrime(uint64_t);
 uint64_t* primeGen();
 uint64_t gcd(uint64_t,uint64_t);
 uint64_t* encrypt(char*, uint64_t, uint64_t, uint64_t);
+uint64_t modInverse(uint64_t a, uint64_t m);
 
 
 int main(){
+
+    uint64_t* primes = primeGen();
+    uint64_t e = 3;
+    uint64_t phi = (*(primes) - 1)*(*(primes+1) - 1);
+
+    while (gcd(e,phi) != 1)
+    {
+        e+=2;
+    }
+    
+    char message[50];
+    cin>>message;
+    char* messagePtr = message;
+
+
+    encrypt(messagePtr,11,3,3);
+    /*
+    while (*(messagePtr) != '\0')
+    {
+        cout<<(int)*(messagePtr)<<endl;
+        messagePtr++;
+    }
+    */
+   cout<<(modInverse(3,20));
 
 }
 
@@ -75,6 +100,17 @@ uint64_t* encrypt(char *m, uint64_t p, uint64_t q, uint64_t e){
         *(m) = temp;
         ++m;
     }
+    
+}
+
+uint64_t modInverse(uint64_t a, uint64_t m) {
+
+    uint64_t b = 0;
+    while ((a*b)%m != 1)
+    {
+        b++;
+    }
+    return b;
     
 }
 
