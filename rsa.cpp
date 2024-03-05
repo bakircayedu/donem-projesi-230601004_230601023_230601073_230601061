@@ -1,21 +1,26 @@
 #include <iostream>
 #include <cmath>
 #include <random>
+uint64_t power(uint64_t a, uint64_t b);
 
 using namespace std;
 
 bool isPrime(uint64_t);
 uint64_t* primeGen();
 uint64_t gcd(uint64_t,uint64_t);
-uint64_t* encrypt(char*, uint64_t, uint64_t, uint64_t);
+uint64_t* encrypt(uint64_t *m, int size, uint64_t p, uint64_t q, uint64_t e);
 uint64_t modInverse(uint64_t a, uint64_t m);
-
+uint64_t* decrypt(uint64_t *m, int size, uint64_t p, uint64_t q, uint64_t e);
 
 int main(){
+    
+    //TO-DO: Fix integer overflow problem
 
     uint64_t* primes = primeGen();
+    uint64_t p = *(primes);
+    uint64_t q = *(primes - 1);
     uint64_t e = 3;
-    uint64_t phi = (*(primes) - 1)*(*(primes+1) - 1);
+    uint64_t phi = (p - 1)*(q - 1);
 
     while (gcd(e,phi) != 1)
     {
@@ -24,18 +29,34 @@ int main(){
     
     char message[50];
     cin>>message;
-    char* messagePtr = message;
+    int messageLength = 0;
 
-
-    encrypt(messagePtr,11,3,3);
-    /*
-    while (*(messagePtr) != '\0')
+    while (message[messageLength] != '\0')
     {
-        cout<<(int)*(messagePtr)<<endl;
-        messagePtr++;
+        messageLength++;
     }
-    */
-   cout<<(modInverse(3,20));
+
+    uint64_t messageInt[messageLength];
+
+    for(int i=0;i<messageLength;i++){
+        messageInt[i] = ((uint64_t) message[i]);
+    }
+
+
+    encrypt(&messageInt[0],messageLength,p,q,e);
+    
+    for(int i:messageInt)
+    {
+        cout<<i<<endl;
+    }
+    cout<<"-----------------"<<endl;
+
+    decrypt(&messageInt[0],messageLength,p,q,e);
+
+    for(int i:messageInt)
+    {
+        cout<<i<<endl;
+    }
 
 }
 
@@ -47,8 +68,8 @@ uint64_t* primeGen(){
     
     random_device rd;
     default_random_engine generator(rd());
-    uint64_t max = 99999;
-    uint64_t min = 10000;
+    uint64_t max = 999;
+    uint64_t min = 100;
 
     uniform_int_distribution<long long unsigned> distribution(min,max);
     for(int i = 0; i<=1; i++){
@@ -87,20 +108,35 @@ uint64_t gcd(uint64_t a, uint64_t b) {
     return gcd(b, a % b);
 }
 
-uint64_t* encrypt(char *m, uint64_t p, uint64_t q, uint64_t e){
+uint64_t* encrypt(uint64_t *m, int size, uint64_t p, uint64_t q, uint64_t e){
 
-    int temp;
+    uint64_t temp;
 
     uint64_t n = p*q;
 
-    while(*(m) != '\0'){
-        temp = (int)*(m);
-        temp = pow(temp,e);
-        temp %= n;
-        *(m) = temp;
-        ++m;
+    for(int i = 0; i<size; i++){
+        temp = *(m+i);
+        temp = power(temp,e);
+        temp = temp%n;
+        *(m+i) = temp;
     }
     
+}
+
+uint64_t* decrypt(uint64_t *m, int size, uint64_t p, uint64_t q, uint64_t e){
+
+    uint64_t temp;
+
+    uint64_t n = p*q;
+    uint64_t phi = (p-1)*(q-1);
+    uint64_t d = modInverse(e,phi);
+
+    for(int i = 0; i<size; i++){
+        temp = *(m+i);
+        temp = power(temp,d);
+        temp = temp%n;
+        *(m+i) = temp;
+    }
 }
 
 uint64_t modInverse(uint64_t a, uint64_t m) {
@@ -112,6 +148,14 @@ uint64_t modInverse(uint64_t a, uint64_t m) {
     }
     return b;
     
+}
+
+uint64_t power(uint64_t a, uint64_t b){
+    uint64_t base = a;
+    for(int i = b; i>1; i--){
+        a *= base;
+    }
+    return a;
 }
 
 
