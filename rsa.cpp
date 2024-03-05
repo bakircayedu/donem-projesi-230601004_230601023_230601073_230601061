@@ -11,14 +11,13 @@ uint64_t gcd(uint64_t,uint64_t);
 uint64_t* encrypt(uint64_t *m, int size, uint64_t p, uint64_t q, uint64_t e);
 uint64_t modInverse(uint64_t a, uint64_t m);
 uint64_t* decrypt(uint64_t *m, int size, uint64_t p, uint64_t q, uint64_t e);
+uint64_t modExp(uint64_t base, uint64_t exp, uint64_t m);
 
 int main(){
-    
-    //TO-DO: Fix integer overflow problem
 
     uint64_t* primes = primeGen();
     uint64_t p = *(primes);
-    uint64_t q = *(primes - 1);
+    uint64_t q = *(primes + 1);
     uint64_t e = 3;
     uint64_t phi = (p - 1)*(q - 1);
 
@@ -26,6 +25,7 @@ int main(){
     {
         e+=2;
     }
+    cout<<"e= "<<e<<endl;
     
     char message[50];
     cin>>message;
@@ -41,6 +41,12 @@ int main(){
     for(int i=0;i<messageLength;i++){
         messageInt[i] = ((uint64_t) message[i]);
     }
+
+    for(int i:messageInt)
+    {
+        cout<<i<<endl;
+    }
+    cout<<"-----------------"<<endl;
 
 
     encrypt(&messageInt[0],messageLength,p,q,e);
@@ -68,8 +74,8 @@ uint64_t* primeGen(){
     
     random_device rd;
     default_random_engine generator(rd());
-    uint64_t max = 999;
-    uint64_t min = 100;
+    uint64_t max = 9999;
+    uint64_t min = 1000;
 
     uniform_int_distribution<long long unsigned> distribution(min,max);
     for(int i = 0; i<=1; i++){
@@ -116,8 +122,7 @@ uint64_t* encrypt(uint64_t *m, int size, uint64_t p, uint64_t q, uint64_t e){
 
     for(int i = 0; i<size; i++){
         temp = *(m+i);
-        temp = power(temp,e);
-        temp = temp%n;
+        temp = modExp(temp,e,n);
         *(m+i) = temp;
     }
     
@@ -133,8 +138,7 @@ uint64_t* decrypt(uint64_t *m, int size, uint64_t p, uint64_t q, uint64_t e){
 
     for(int i = 0; i<size; i++){
         temp = *(m+i);
-        temp = power(temp,d);
-        temp = temp%n;
+        temp = modExp(temp,d,n);
         *(m+i) = temp;
     }
 }
@@ -156,6 +160,15 @@ uint64_t power(uint64_t a, uint64_t b){
         a *= base;
     }
     return a;
+}
+
+uint64_t modExp(uint64_t base, uint64_t exp, uint64_t m){
+    uint64_t tempExp = 1;
+    uint64_t c = base*1%m;
+    for(int i = 2; i<=exp; i++){
+        c = base*c%m;
+    }
+    return c;
 }
 
 
