@@ -11,6 +11,8 @@ void encrypt(string &message, string &key, string &encryptedMessage);
 void decrypt(string &encryptedMessage, string &key, string &decryptedMessage);
 
 int main() {
+    srand(static_cast<unsigned int>(time(NULL))); // Rastgele sayý üreteci baþlatýlýyor
+
     string message;
     string satir;
     int length;
@@ -19,7 +21,7 @@ int main() {
     string encryptedMessage;
     string decryptedMessage;
     
-    //Dosya iþlemleri
+    // Dosya iþlemleri
     ifstream dosyaOku("mesaj.txt"); 
     while (getline(dosyaOku, satir)) {
         message += satir + "\n"; // Her satýrý stringe ekleyerek mesajý oluþtur
@@ -45,7 +47,7 @@ int main() {
             key = key.substr(0, message.length());
         }
         decrypt(message, key, decryptedMessage);
-        cout << "Your message is encrypted succesfully" << endl;
+        cout << "Your message is decrypted succesfully" << endl;
         ofstream dosyaYaz("mesaj.txt");
         dosyaYaz << decryptedMessage;
         dosyaYaz.close();
@@ -62,7 +64,7 @@ void setKey(string &key, int length) {
     }
 }
 
-//Encrypts message with random key
+// Encrypts message with random key
 void encrypt(string &message, string &key, string &encryptedMessage) {
     encryptedMessage = "";
     for (int i = 0; i < message.length(); i++) {
@@ -70,7 +72,7 @@ void encrypt(string &message, string &key, string &encryptedMessage) {
     }
 }
 
-//Decrypts encrypted message with key
+// Decrypts encrypted message with key
 void decrypt(string &encryptedMessage, string &key, string &decryptedMessage) {
     decryptedMessage = "";
     for (int i = 0; i < encryptedMessage.length(); i++) {
