@@ -40,6 +40,8 @@ int main(){
     }
     
     //Get message to encrypt from user
+    cout<<"Public anahtarinizin p: "<<p<<", q: "<<q<<" ve e: "<<e<<endl;
+    cout<<"Sifrelenecek metni girin: ";
     char message[256];
     cin.getline(message,256);
 
@@ -66,7 +68,7 @@ int main(){
     cout<<"Encrypted: ";
     for(int i:messageInt)
     {
-        cout<<i<<endl;
+        cout<<i;
     }
     cout<<"\n-----------------"<<endl;
 
@@ -211,13 +213,3 @@ void decrypt(uint64_t *m, int size, uint64_t p, uint64_t q, uint64_t e){
         *(m+i) = temp;
     }
 }
-
-
-
-
-
-
-
-
-
-
